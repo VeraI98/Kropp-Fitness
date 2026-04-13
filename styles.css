@@ -1,57 +1,18 @@
-@font-face {
-  font-family: 'Heebo';
-  src: url('./fonts/Heebo-Light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Heebo';
-  src: url('./fonts/Heebo-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Yantramanav';
-  src: url('./fonts/Yantramanav-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/**
-  Нормализация блочной модели
- */
 *,
-*::before,
-*::after {
+::before,
+::after {
   box-sizing: border-box;
 }
 
-/**
-  Убираем внутренние отступы слева тегам списков,
-  у которых есть атрибут class
- */
 :where(ul, ol):where([class]) {
   padding-left: 0;
 }
 
-/**
-  Убираем внешние отступы body и двум другим тегам,
-  у которых есть атрибут class
- */
 body,
-:where(blockquote, figure):where([class]) {
+:where(blockquote, figure, fieldset):where([class]) {
   margin: 0;
 }
 
-/**
-  Убираем внешние отступы вертикали нужным тегам,
-  у которых есть атрибут class
- */
 :where(
   h1,
   h2,
@@ -71,17 +32,29 @@ body,
   margin-left: 0;
 }
 
-/**
-  Убираем стандартный маркер маркированному списку,
-  у которого есть атрибут class
- */
+:where(fieldset[class]) {
+  padding: 0;
+  border: none;
+}
+
 :where(ul[class]) {
   list-style: none;
 }
 
-/**
-  Упрощаем работу с изображениями
- */
+:where(address[class]) {
+  font-style: normal;
+}
+
+p {
+  --paragraphMarginBottom: 24px;
+
+  margin-block: 0;
+}
+
+p:where(:not([class]):not(:last-child)) {
+  margin-bottom: var(--paragraphMarginBottom);
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -259,6 +232,7 @@ h1, h2, h3, h4, h5, h6 {
   background: url('./icons/plus.svg') center/contain no-repeat;
 }
 
+/* для отображения текста заголовка в виде обводки позади основного текста, используя свойство text-stroke для создания эффекта обводки и позиционируя его позади основного текста с помощью z-index и абсолютного позиционирования */
 .backdrop-title::after {
   content: attr(data-title);
   position: absolute;
@@ -514,6 +488,55 @@ input[type=number] {
 
 
 
+/*MOTION*/
+
+/* для элементов с классом motivation-item, которые являются четными детьми внутри своего родителя, устанавливаем цвет текста на значение переменной --color-dark-alternate, чтобы создать чередующийся цвет для элементов мотивационного блока */
+.motivation-item:nth-child(even) {
+  background-color: var(--color-dark-alternate);
+}
+
+.motivation-item:nth-child(even) .motivation-card {
+  flex-direction: row-reverse;
+}
+
+.motivation-card {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  column-gap: clamp(30px, 10.42vw, 200px);
+}
+
+.motivation-card-image {
+  margin-block: -60px;
+}
+
+.motivation-card-body {
+  padding-left: 35px;
+}
+
+.motivation-card-title:not(:last-child) {
+  margin-bottom: 14px;
+}
+
+.motivation-card-description {
+  max-width: 400px;
+}
+
+.motivation-card-description:not(:last-child) {
+  margin-bottom: 37px;
+}
+
+
+
+
+
+@media (max-width: 1919px) {
+  .header-menu-list {
+    margin-block: -20px;
+  }
+}
+
+
 
 @media (max-width: 1024px) {
   .header {
@@ -539,7 +562,19 @@ input[type=number] {
   .banner {
     row-gap: 10px;
   }
+
+  .motivation-card {
+    padding-block: 50px;
+  }
+
+  .motivation-card-image {
+    max-width:  30%;
+    height: auto;
+    margin-block: 0; /* убираем отрицательный отступ для изображений, чтобы они не перекрывали другие элементы при уменьшении ширины экрана */
+  }
 }
+
+
 
 @media (max-width: 767px) {
   .button {
@@ -562,5 +597,19 @@ input[type=number] {
   }
   .banner-info::before {
     margin-right: 10px;
+  }
+  .motivation-card,
+  .motivation-item:nth-child(even) .motivation-card {
+    flex-direction: column-reverse;
+  }
+  .motivation-card {
+    row-gap: 30px;
+    padding-block: 30px;
+  }
+  .motivation-card-image {
+    max-width: 60%;
+  }
+  .motivation-card-description:not(:last-child) {
+    margin-bottom: 20px;
   }
 }
